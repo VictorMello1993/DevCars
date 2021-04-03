@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +30,15 @@ namespace DevCars.API
         {
             /*Testando API com bancos de dados em memória. Por isso, é adequado utilizar singleton para toda a execução da API, para não perder as 
              * informações para qualquer requisição que exija acesso a banco de dados*/
-            services.AddSingleton<DevCarsDbContext>();
+            //services.AddSingleton<DevCarsDbContext>();
+
+            var connectionString = Configuration.GetConnectionString("DevCarsConnectionString");            
+
+            //Configurando o banco SQL Server
+            services.AddDbContext<DevCarsDbContext>(options => options.UseSqlServer(connectionString));
+
+            //Banco de dados em memória
+            //services.AddDbContext<DevCarsDbContext>(options => options.UseInMemoryDatabase("DevCars")); 
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

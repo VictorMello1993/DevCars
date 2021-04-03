@@ -3,6 +3,7 @@ using DevCars.API.InputModels;
 using DevCars.API.Persistence;
 using DevCars.API.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DevCars.API.Controllers
 {
-    [Route("api/costumers")]
+    [Route("api/customers")]
     public class CustomersController : ControllerBase
     {
         private readonly DevCarsDbContext _dbContext;
@@ -24,9 +25,10 @@ namespace DevCars.API.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] AddCostumerInputModel model)
         {
-            var costumer = new Customer(4, model.FullName, model.Document, model.BirthDate);
+            var costumer = new Customer(model.FullName, model.Document, model.BirthDate);
 
             _dbContext.Customers.Add(costumer);
+            _dbContext.SaveChanges();
 
             return NoContent();
         }
@@ -37,23 +39,24 @@ namespace DevCars.API.Controllers
         {
             var car = _dbContext.Cars.SingleOrDefault(c => c.Id == model.IdCar);
             var extraItems = model.ExtraItems.Select(e => new ExtraOrderItem(e.Description, e.Price)).ToList();
-            var customer = _dbContext.Customers.SingleOrDefault(c => c.Id == model.IdCostumer);
+            var order = new Order(model.IdCar, model.IdCostumer, car.Price, extraItems);
 
-            var order = new Order(1, model.IdCar, model.IdCostumer, car.Price, extraItems);
+            //var customer = _dbContext.Customers.SingleOrDefault(c => c.Id == model.IdCostumer);
+            //customer.Purchase(order);
 
-            customer.Purchase(order);
+            _dbContext.Orders.Add(order);
+            _dbContext.SaveChanges();
 
-            return CreatedAtAction(nameof(GetOrder), new { id = customer.Id, orderid = order.Id }, model);
+            return CreatedAtAction(nameof(GetOrder), new { id = order.IdCostumer, orderid = order.Id }, model);
         }
         
         //Mostrando detalhes do pedido
         [HttpGet("{id}/orders/{orderid}")]
         public IActionResult GetOrder(int id, int orderid)
-        {
-            var customer = _dbContext.Customers.SingleOrDefault(c => c.Id == id);            
-            var order = customer.Orders.SingleOrDefault(o => o.Id == orderid);            
+        {            
+            var order = _dbContext.Orders.Include(o => o.ExtraItems).Include(c => c.Customer).SingleOrDefault(o => o.Id == orderid);            
 
-            if (customer == null && order == null)
+            if (order == null)
             {
                 return NotFound();
             }

@@ -7,16 +7,14 @@ namespace DevCars.API.Entities
 {
     public class Car
     {
-        public Car(int id,
-                   string vinCode,
+        public Car(string vinCode,
                    string brand,
                    string model,
                    int year,
                    decimal price,
                    string color,
                    DateTime productionDate)
-        {
-            Id = id;
+        {            
             VinCode = vinCode;
             Brand = brand;
             Model = model;
@@ -28,6 +26,8 @@ namespace DevCars.API.Entities
             Status = CarStatusEnum.Available;
             RegisteredAt = DateTime.Now;
         }
+
+        protected Car() { }
 
         public int Id { get; private set; }
         public string VinCode { get; private set; }
