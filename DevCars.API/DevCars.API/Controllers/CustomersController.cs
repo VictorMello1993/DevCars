@@ -2,6 +2,7 @@
 using DevCars.API.InputModels;
 using DevCars.API.Persistence;
 using DevCars.API.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,9 +21,25 @@ namespace DevCars.API.Controllers
         {
             _dbContext = dbContext;
         }
-
-        //Cadastrando clientes
+        
+        /// <summary>
+        /// Cadastro de clientes
+        /// </summary>
+        /// <remarks>
+        /// Requisição de exemplo:
+        /// {
+        ///     "fullname": "Victor",
+        ///     "document": "abc123",
+        ///     "birthdate": 1993-12-15
+        /// }
+        /// </remarks>
+        /// <param name="model">Dados de um novo cliente</param>
+        /// <returns>Objeto recém-criado</returns>
+        /// <response code="204">Objeto criado com sucesso</response>
+        /// <response code="400">Dados inválidos</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post([FromBody] AddCostumerInputModel model)
         {
             var costumer = new Customer(model.FullName, model.Document, model.BirthDate);
@@ -32,9 +49,36 @@ namespace DevCars.API.Controllers
 
             return NoContent();
         }
-        
-        //Cadastrando pedidos
+
+        /// <summary>
+        /// Cadastro de pedidos
+        /// </summary>
+        /// <remarks>
+        /// Requisição de exemplo:
+        /// {
+        ///     "idCar": 1,
+        ///     "idCostumer": 2,
+        ///     "extraItems": [
+        ///         {
+        ///         "description": "Teto solar",
+        ///         "price": 2500
+        ///         },
+        ///         {
+        ///           "description": "blindado"
+        ///           "price": 10000
+        ///         }
+        ///       ]
+        ///     
+        /// }
+        /// </remarks>
+        /// <param name="id">Id do cliente</param>
+        /// <param name="model">Dados de um novo pedido</param>
+        /// <returns>Objeto de pedido recém-criado</returns>
+        /// <response code="201">Objeto criado com sucesso</response>
+        /// <response code="400">Dados inválidos</response>
         [HttpPost("{id}/orders")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult PostOrder(int id, [FromBody] AddOrderInputModel model)
         {
             var car = _dbContext.Cars.SingleOrDefault(c => c.Id == model.IdCar);
@@ -50,8 +94,17 @@ namespace DevCars.API.Controllers
             return CreatedAtAction(nameof(GetOrder), new { id = order.IdCostumer, orderid = order.Id }, model);
         }
         
-        //Mostrando detalhes do pedido
+        /// <summary>
+        /// Mostrando detalhes do pedido
+        /// </summary>
+        /// <param name="id">Id do cliente</param>
+        /// <param name="orderid">Id do pedido</param>
+        /// <returns>Um objeto com dados do pedido</returns>
+        /// <response code="200">Objeto encontrado</response>
+        /// <response code="404">Objeto não encontrado</response>
         [HttpGet("{id}/orders/{orderid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetOrder(int id, int orderid)
         {            
             var order = _dbContext.Orders.Include(o => o.ExtraItems).Include(c => c.Customer).SingleOrDefault(o => o.Id == orderid);            

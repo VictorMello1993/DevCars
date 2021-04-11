@@ -11,7 +11,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DevCars.API
@@ -32,7 +34,7 @@ namespace DevCars.API
              * informações para qualquer requisição que exija acesso a banco de dados*/
             //services.AddSingleton<DevCarsDbContext>();
 
-            var connectionString = Configuration.GetConnectionString("DevCarsConnectionString");            
+            var connectionString = Configuration.GetConnectionString("DevCarsConnectionString");
 
             //Configurando o banco SQL Server
             services.AddDbContext<DevCarsDbContext>(options => options.UseSqlServer(connectionString));
@@ -43,7 +45,25 @@ namespace DevCars.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DevCars.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "DevCars.API",
+                    Version = "v1",
+
+                    //Gerando arquivo xml contendo todos os detalhes da documentação do Swagger
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Victor Santos de Mello",
+                        Email = "victorsmello93@gmail.com",
+                        Url = new Uri("https://github.com/VictorMello1993")
+                    }
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+                c.IncludeXmlComments(xmlPath);
+
             });
         }
 
