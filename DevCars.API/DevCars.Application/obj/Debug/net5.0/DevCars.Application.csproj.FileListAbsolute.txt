@@ -1,0 +1,17 @@
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\bin\Debug\net5.0\DevCars.Application.deps.json
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\bin\Debug\net5.0\DevCars.Application.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\bin\Debug\net5.0\ref\DevCars.Application.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\bin\Debug\net5.0\DevCars.Application.pdb
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\bin\Debug\net5.0\DevCars.Domain.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\bin\Debug\net5.0\DevCars.Infrastructure.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\bin\Debug\net5.0\DevCars.Infrastructure.pdb
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\bin\Debug\net5.0\DevCars.Domain.pdb
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\DevCars.Application.csprojAssemblyReference.cache
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\DevCars.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\DevCars.Application.AssemblyInfoInputs.cache
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\DevCars.Application.AssemblyInfo.cs
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\DevCars.Application.csproj.CoreCompileInputs.cache
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\DevCars.Application.csproj.CopyComplete
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\DevCars.Application.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\ref\DevCars.Application.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Application\obj\Debug\net5.0\DevCars.Application.pdb

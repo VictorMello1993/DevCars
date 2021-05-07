@@ -1,4 +1,6 @@
 using DevCars.API.Persistence;
+using DevCars.Application.Commands.AddCar;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,6 +43,9 @@ namespace DevCars.API
 
             //Banco de dados em memória
             //services.AddDbContext<DevCarsDbContext>(options => options.UseInMemoryDatabase("DevCars")); 
+
+            //Configuração de injeção de dependência do MediatR para o padrão CQRS
+            services.AddMediatR(typeof(AddCarCommand));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -1,13 +1,10 @@
-﻿using DevCars.API.Entities;
-using DevCars.API.InputModels;
-using DevCars.API.Persistence;
-using DevCars.API.ViewModels;
+﻿using DevCars.API.Persistence;
+using DevCars.Application.Commands.AddCostumer;
+using DevCars.Application.Commands.AddOrder;
+using DevCars.Application.Queries.GetOrder;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevCars.API.Controllers
@@ -16,10 +13,12 @@ namespace DevCars.API.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly DevCarsDbContext _dbContext;
+        private readonly IMediator _mediator;
 
-        public CustomersController(DevCarsDbContext dbContext)
+        public CustomersController(DevCarsDbContext dbContext, IMediator mediator)
         {
             _dbContext = dbContext;
+            _mediator = mediator;
         }
         
         /// <summary>
@@ -33,19 +32,16 @@ namespace DevCars.API.Controllers
         ///     "birthdate": 1993-12-15
         /// }
         /// </remarks>
-        /// <param name="model">Dados de um novo cliente</param>
+        /// <param name="command">Dados de um novo cliente</param>
         /// <returns>Objeto recém-criado</returns>
         /// <response code="204">Objeto criado com sucesso</response>
         /// <response code="400">Dados inválidos</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody] AddCostumerInputModel model)
+        public async Task<IActionResult> Post([FromBody] AddCostumerCommand command)
         {
-            var costumer = new Customer(model.FullName, model.Document, model.BirthDate);
-
-            _dbContext.Customers.Add(costumer);
-            _dbContext.SaveChanges();
+            await _mediator.Send(command);
 
             return NoContent();
         }
@@ -72,26 +68,24 @@ namespace DevCars.API.Controllers
         /// }
         /// </remarks>
         /// <param name="id">Id do cliente</param>
-        /// <param name="model">Dados de um novo pedido</param>
+        /// <param name="command">Dados de um novo pedido</param>
         /// <returns>Objeto de pedido recém-criado</returns>
         /// <response code="201">Objeto criado com sucesso</response>
         /// <response code="400">Dados inválidos</response>
+        /// <response code="404">Objeto não encontrado</response>
         [HttpPost("{id}/orders")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult PostOrder(int id, [FromBody] AddOrderInputModel model)
+        public async Task<IActionResult> PostOrder(int id, [FromBody] AddOrderCommand command)
         {
-            var car = _dbContext.Cars.SingleOrDefault(c => c.Id == model.IdCar);
-            var extraItems = model.ExtraItems.Select(e => new ExtraOrderItem(e.Description, e.Price)).ToList();
-            var order = new Order(model.IdCar, model.IdCostumer, car.Price, extraItems);
+            var newOrderId = await _mediator.Send(command);
 
-            //var customer = _dbContext.Customers.SingleOrDefault(c => c.Id == model.IdCostumer);
-            //customer.Purchase(order);
+            if(newOrderId == default(int))
+            {
+                return NotFound();
+            }
 
-            _dbContext.Orders.Add(order);
-            _dbContext.SaveChanges();
-
-            return CreatedAtAction(nameof(GetOrder), new { id = order.IdCostumer, orderid = order.Id }, model);
+            return CreatedAtAction(nameof(GetOrder), new { id = command.IdCostumer, orderid = newOrderId }, command);
         }
         
         /// <summary>
@@ -105,18 +99,16 @@ namespace DevCars.API.Controllers
         [HttpGet("{id}/orders/{orderid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetOrder(int id, int orderid)
-        {            
-            var order = _dbContext.Orders.Include(o => o.ExtraItems).Include(c => c.Customer).SingleOrDefault(o => o.Id == orderid);            
+        public async Task<IActionResult> GetOrder(int id, int orderid)
+        {
+            var query = new GetOrderQuery(id, orderid);
 
-            if (order == null)
+            var orderViewModel = await _mediator.Send(query);
+
+            if(orderViewModel == null)
             {
                 return NotFound();
             }
-
-            var extraItems = order.ExtraItems.Select(e => e.Description).ToList();
-
-            var orderViewModel = new OrderDetailsViewModel(order.IdCar, order.IdCostumer, order.TotalCost, extraItems);
 
             return Ok(orderViewModel);
         }
