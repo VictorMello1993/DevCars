@@ -11,7 +11,7 @@ API de gerenciamento de vendas de carros - Bootcamp ASP.NET Core 4ª Edição - 
 </ul>
 
 ## Melhorias
-- [ ] Refatoração de código para que seja estruturado conforme os princípios da Arquitetura Limpa
-- [ ] Separação de responsabilidades dos métodos de acesso a dados com padrão CQRS
+- [x] Refatoração de código para que seja estruturado conforme os princípios da Arquitetura Limpa
+- [x] Separação de responsabilidades dos métodos de acesso a dados com padrão CQRS
 - [ ] Encapsulamento dos métodos de acesso a dados com padrão Repository
 - [ ] Validação da API com Fluent API
