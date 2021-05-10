@@ -101,7 +101,7 @@ namespace DevCars.API.Controllers
         /// }
         /// </remarks>
         /// <param name="id">Identificador de um carro</param>
-        /// <param name="command">Dados de alteração</param>
+        /// <param name="inputModel">Dados de alteração</param>
         /// <returns>Não tem retorno.</returns>
         /// <response code="204">Alterações realizadas com sucesso.</response>
         /// <response code="400">Dados inválidos.</response>

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace DevCars.API.Entities
 {
-    public class Customer
+    public class Costumer
     {
-        protected Customer() { }
-        public Customer(string fullName, string document, DateTime birthDate)
+        protected Costumer() { }
+        public Costumer(string fullName, string document, DateTime birthDate)
         {
             FullName = fullName;
             Document = document;

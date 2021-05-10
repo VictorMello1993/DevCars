@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 namespace DevCars.API.Controllers
 {
     [Route("api/customers")]
-    public class CustomersController : ControllerBase
+    public class CostumersController : ControllerBase
     {
         private readonly DevCarsDbContext _dbContext;
         private readonly IMediator _mediator;
 
-        public CustomersController(DevCarsDbContext dbContext, IMediator mediator)
+        public CostumersController(DevCarsDbContext dbContext, IMediator mediator)
         {
             _dbContext = dbContext;
             _mediator = mediator;

@@ -22,7 +22,7 @@ namespace DevCars.API.Entities
         public int IdCar { get; private set; }
         public Car Car { get; private set; }        
         public int IdCostumer { get; private set; }
-        public Customer Customer { get; private set; }
+        public Costumer Customer { get; private set; }
         public decimal TotalCost { get; private set; }
         public List<ExtraOrderItem> ExtraItems { get; set; }
     }

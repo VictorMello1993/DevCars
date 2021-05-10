@@ -47,25 +47,29 @@ namespace DevCars.API.Entities
 
         public void SetAsSuspended()
         {
-            if (Status != CarStatusEnum.Suspended)
+            switch (Status)
             {
-                Status = CarStatusEnum.Suspended;
-            }
-            else
-            {
-                throw new CarAlreadySuspendedException();
-            }
+                case CarStatusEnum.Available:
+                    Status = CarStatusEnum.Suspended;
+                    break;
+                case CarStatusEnum.Sold:
+                    throw new OnlyAvailableCarsCanBeSuspendedException();                    
+                case CarStatusEnum.Suspended:
+                    throw new CarAlreadySuspendedException();                
+            }            
         }
 
         public void SetAsSold()
         {
-            if (Status != CarStatusEnum.Sold)
+            switch (Status)
             {
-                Status = CarStatusEnum.Sold;
-            }
-            else
-            {
-                throw new CarAlreadySoldException();
+                case CarStatusEnum.Available:
+                    Status = CarStatusEnum.Sold;
+                    break;
+                case CarStatusEnum.Sold:
+                    throw new CarAlreadySoldException();
+                case CarStatusEnum.Suspended:
+                    throw new OnlyAvailableCarsCanBeSoldException();                
             }
         }
     }

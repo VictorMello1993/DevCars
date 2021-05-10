@@ -1,5 +1,6 @@
 ﻿using DevCars.API.Entities;
 using DevCars.API.Persistence;
+using DevCars.Domain.Repositories;
 using MediatR;
 using System.Linq;
 using System.Threading;
@@ -10,10 +11,12 @@ namespace DevCars.Application.Commands.AddOrder
     public class AddOrderCommandHandler : IRequestHandler<AddOrderCommand, int>
     {
         private readonly DevCarsDbContext _dbContext;
+        private readonly IOrderRepository _orderRepository;
 
-        public AddOrderCommandHandler(DevCarsDbContext dbContext)
+        public AddOrderCommandHandler(DevCarsDbContext dbContext, IOrderRepository orderRepository)
         {
             _dbContext = dbContext;
+            _orderRepository = orderRepository;
         }
 
         public async Task<int> Handle(AddOrderCommand request, CancellationToken cancellationToken)
@@ -27,8 +30,7 @@ namespace DevCars.Application.Commands.AddOrder
 
                 car.SetAsSold();
 
-                await _dbContext.Orders.AddAsync(order);
-                await _dbContext.SaveChangesAsync();
+                await _orderRepository.AddAsync(order);
 
                 return order.Id;
             }

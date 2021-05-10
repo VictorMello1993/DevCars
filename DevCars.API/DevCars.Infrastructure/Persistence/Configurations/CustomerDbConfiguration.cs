@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DevCars.API.Configurations
 {
-    public class CustomerDbConfiguration : IEntityTypeConfiguration<Customer>
+    public class CustomerDbConfiguration : IEntityTypeConfiguration<Costumer>
     {
-        public void Configure(EntityTypeBuilder<Customer> builder)
+        public void Configure(EntityTypeBuilder<Costumer> builder)
         {
             builder.HasKey(c => c.Id);
 

@@ -16,7 +16,7 @@ namespace DevCars.API.Persistence
 
         }
         public DbSet<Car> Cars { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Costumer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<ExtraOrderItem> ExtraOrderItems { get; set; }
 

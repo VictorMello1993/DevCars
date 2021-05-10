@@ -1,5 +1,6 @@
 ﻿using DevCars.API.Entities;
 using DevCars.API.Persistence;
+using DevCars.Domain.Repositories;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,10 +10,12 @@ namespace DevCars.Application.Commands.AddCar
     public class AddCarCommandHandler : IRequestHandler<AddCarCommand, int>
     {
         private readonly DevCarsDbContext _dbContext;
+        private readonly ICarRepository _carRepository;
 
-        public AddCarCommandHandler(DevCarsDbContext dbContext)
+        public AddCarCommandHandler(DevCarsDbContext dbContext, ICarRepository carRepository)
         {
             _dbContext = dbContext;
+            _carRepository = carRepository;
         }
 
         public async Task<int> Handle(AddCarCommand request, CancellationToken cancellationToken)
@@ -25,8 +28,7 @@ namespace DevCars.Application.Commands.AddCar
                               request.Color,
                               request.ProductionDate);
 
-            await _dbContext.Cars.AddAsync(car);
-            await _dbContext.SaveChangesAsync();
+            await _carRepository.AddAsync(car);
 
             return car.Id;
         }
