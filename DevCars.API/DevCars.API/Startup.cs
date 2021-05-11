@@ -1,7 +1,10 @@
+using DevCars.API.Filters;
 using DevCars.API.Persistence;
 using DevCars.Application.Commands.AddCar;
+using DevCars.Application.Validators;
 using DevCars.Domain.Repositories;
 using DevCars.Infrastructure.Persistence.Repositories;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,7 +57,9 @@ namespace DevCars.API
             services.AddScoped<ICostumerRepository, CostumerRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
 
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(typeof(ValidationFilter))) //Configurando filtros de validação
+                    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddCarValidator>()); //Adicionando fluent validation                    
+                    
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo

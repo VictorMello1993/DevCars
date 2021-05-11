@@ -80,11 +80,6 @@ namespace DevCars.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] AddCarCommand command)
         {
-            if(command.Model.Length > 50)
-            {
-                return BadRequest("Modelo não pode ter mais de 50 caracteres");
-            }
-
             var id = await _mediator.Send(command);
 
             return CreatedAtAction(nameof(GetById), new { id = id }, command);
@@ -114,6 +109,11 @@ namespace DevCars.API.Controllers
         {
             var command = new UpdateCarCommand(inputModel.Color, inputModel.Price, id);
 
+            if(id < 0)
+            {
+                return BadRequest("O id do carro não pode ser negativo!");
+            }
+
             await _mediator.Send(command);
 
             return NoContent();
@@ -130,6 +130,11 @@ namespace DevCars.API.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var command = new DeleteCarCommand(id);
+
+            if(id < 0)
+            {
+                return BadRequest("O id do carro não pode ser negativo!");
+            }
 
             await _mediator.Send(command);
 
