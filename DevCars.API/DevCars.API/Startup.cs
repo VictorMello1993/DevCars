@@ -1,4 +1,11 @@
+using DevCars.API.Filters;
 using DevCars.API.Persistence;
+using DevCars.Application.Commands.AddCar;
+using DevCars.Application.Validators;
+using DevCars.Domain.Repositories;
+using DevCars.Infrastructure.Persistence.Repositories;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -42,7 +49,17 @@ namespace DevCars.API
             //Banco de dados em memória
             //services.AddDbContext<DevCarsDbContext>(options => options.UseInMemoryDatabase("DevCars")); 
 
-            services.AddControllers();
+            //Configuração de injeção de dependência do MediatR para o padrão CQRS
+            services.AddMediatR(typeof(AddCarCommand));
+
+            //Configurando a injeção de dependência do Repository
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<ICostumerRepository, CostumerRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+
+            services.AddControllers(options => options.Filters.Add(typeof(ValidationFilter))) //Configurando filtros de validação
+                    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddCarValidator>()); //Adicionando fluent validation                    
+                    
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo

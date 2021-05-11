@@ -1,0 +1,15 @@
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\bin\Debug\net5.0\DevCars.Infrastructure.deps.json
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\bin\Debug\net5.0\DevCars.Infrastructure.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\bin\Debug\net5.0\ref\DevCars.Infrastructure.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\bin\Debug\net5.0\DevCars.Infrastructure.pdb
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\bin\Debug\net5.0\DevCars.Domain.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\bin\Debug\net5.0\DevCars.Domain.pdb
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\DevCars.Infrastructure.csprojAssemblyReference.cache
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\DevCars.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\DevCars.Infrastructure.AssemblyInfoInputs.cache
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\DevCars.Infrastructure.AssemblyInfo.cs
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\DevCars.Infrastructure.csproj.CoreCompileInputs.cache
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\DevCars.Infrastructure.csproj.CopyComplete
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\DevCars.Infrastructure.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\ref\DevCars.Infrastructure.dll
+D:\Documentos\Bootcamp ASP.NET Core\DevCars\DevCars.API\DevCars.Infrastructure\obj\Debug\net5.0\DevCars.Infrastructure.pdb

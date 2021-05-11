@@ -1,12 +1,13 @@
-﻿using DevCars.API.Entities;
-using DevCars.API.InputModels;
-using DevCars.API.Persistence;
-using DevCars.API.ViewModels;
+﻿using DevCars.API.Persistence;
+using DevCars.Application.Commands.AddCar;
+using DevCars.Application.Commands.DeleteCar;
+using DevCars.Application.Commands.UpdateCar;
+using DevCars.Application.InputModels;
+using DevCars.Application.Queries.GetAllCars;
+using DevCars.Application.Queries.GetCarById;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevCars.API.Controllers
@@ -15,20 +16,22 @@ namespace DevCars.API.Controllers
     public class CarsController : ControllerBase
     {
         private readonly DevCarsDbContext _dbContext;
+        private readonly IMediator _mediator;
 
-        public CarsController(DevCarsDbContext dbContext)
+        public CarsController(DevCarsDbContext dbContext, IMediator mediator)
         {
             _dbContext = dbContext;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var cars = _dbContext.Cars;
+            var query = new GetAllCarsQuery();
 
-            var carsViewModel = cars.Select(c => new CarItemViewModel(c.Id, c.Brand, c.Model, c.Price)).ToList();
+            var cars = await _mediator.Send(query);
 
-            return Ok(carsViewModel);
+            return Ok(cars);
         }
         
         /// <summary>
@@ -39,18 +42,18 @@ namespace DevCars.API.Controllers
         /// <response code="200">Objeto encontrado.</response>
         /// <response code="404">Objeto não encontrado.</response>        
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var car = _dbContext.Cars.SingleOrDefault(c => c.Id == id);
+            var query = new GetCarByIdQuery(id);
+
+            var car = await _mediator.Send(query);
 
             if(car == null)
             {
                 return NotFound();
             }
 
-            var carDetailsViewModel = new CarDetailsViewModel(car.Id, car.Brand, car.Model, car.Color, car.Year, car.Price, car.ProductionDate, car.VinCode);
-
-            return Ok(carDetailsViewModel);
+            return Ok(car);
         }
         
         /// <summary>
@@ -68,28 +71,20 @@ namespace DevCars.API.Controllers
         ///     "productionDate": "2020-12-07"
         /// }
         /// </remarks>
-        /// <param name="model">Dados de um novo carro</param>
+        /// <param name="command">Dados de um novo carro</param>
         /// <returns>Objeto recém-criado</returns>
         /// <response code="201">Objeto criado com sucesso.</response>
         /// <response code="400">Dados inválidos.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post([FromBody] AddCarInputModel model)
+        public async Task<IActionResult> Post([FromBody] AddCarCommand command)
         {
-            if(model.Model.Length > 50)
-            {
-                return BadRequest("Modelo não pode ter mais de 50 caracteres");
-            }
+            var id = await _mediator.Send(command);
 
-            var car = new Car(model.VinCode, model.Brand, model.Model, model.Year, model.Price, model.Color, model.ProductionDate);
-
-            _dbContext.Cars.Add(car);
-            _dbContext.SaveChanges();
-
-            return CreatedAtAction(nameof(GetById), new { id = car.Id }, model);
+            return CreatedAtAction(nameof(GetById), new { id = id }, command);
         }
-        
+
         /// <summary>
         /// Atualizar dados de um carro
         /// </summary>
@@ -101,7 +96,7 @@ namespace DevCars.API.Controllers
         /// }
         /// </remarks>
         /// <param name="id">Identificador de um carro</param>
-        /// <param name="model">Dados de alteração</param>
+        /// <param name="inputModel">Dados de alteração</param>
         /// <returns>Não tem retorno.</returns>
         /// <response code="204">Alterações realizadas com sucesso.</response>
         /// <response code="400">Dados inválidos.</response>
@@ -110,18 +105,16 @@ namespace DevCars.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Put(int id, [FromBody] UpdateCarInputModel model)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateCarInputModel inputModel)
         {
-            var car = _dbContext.Cars.SingleOrDefault(c => c.Id == id);
+            var command = new UpdateCarCommand(inputModel.Color, inputModel.Price, id);
 
-            if(car == null)
+            if(id < 0)
             {
-                return NotFound();
+                return BadRequest("O id do carro não pode ser negativo!");
             }
 
-            car.Update(model.Color, model.Price);
-
-            _dbContext.SaveChanges();
+            await _mediator.Send(command);
 
             return NoContent();
         }
@@ -134,18 +127,16 @@ namespace DevCars.API.Controllers
         /// <response code="204">Exclusão realizada com sucesso.</response>
         /// <response code="404">Objeto não encontrado.</response>     
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var car = _dbContext.Cars.SingleOrDefault(car => car.Id == id);
+            var command = new DeleteCarCommand(id);
 
-            if(car == null)
+            if(id < 0)
             {
-                return NotFound();
+                return BadRequest("O id do carro não pode ser negativo!");
             }
 
-            car.SetAsSuspended();
-
-            _dbContext.SaveChanges();
+            await _mediator.Send(command);
 
             return NoContent();
         }
